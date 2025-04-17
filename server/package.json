@@ -1,0 +1,33 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "description": "",
+  "dependencies": {
+    "@huggingface/inference": "^2.8.1",
+    "@huggingface/transformers": "^3.4.2",
+    "@langchain/community": "^0.3.40",
+    "@langchain/core": "^0.3.44",
+    "@langchain/groq": "^0.2.2",
+    "@langchain/openai": "^0.5.5",
+    "@langchain/pinecone": "^0.2.0",
+    "@pinecone-database/pinecone": "^5.1.1",
+    "@prisma/client": "^6.6.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "langchain": "^0.3.21",
+    "nodemon": "^3.1.9"
+  },
+  "devDependencies": {
+    "prisma": "^6.6.0"
+  }
+}
