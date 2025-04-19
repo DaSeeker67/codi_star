@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
 
-const app = express();  
+
 import cors from "cors";
 import cookieParser from "cookie-parser";
 // Import routes using ES module syntax
@@ -42,7 +42,7 @@ app.get('/', (req, res) => {
 });
 
 const port = process.env.PORT || 3005;
-
+module.exports = serverless(app);
 try {
   app.listen(port, async () => {
     console.log(`Server listening on port ${port}`);
@@ -57,3 +57,5 @@ try {
 } catch (error) {
   console.log(error);
 }
+
+
