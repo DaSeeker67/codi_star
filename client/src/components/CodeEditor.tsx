@@ -8,7 +8,7 @@ import {
   AlertDialogFooter,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { FileExplorer } from './FileExplorer';
+import  FileExplorer  from './FileExplorer';
 
 export interface FileSystemItem {
   id: string;

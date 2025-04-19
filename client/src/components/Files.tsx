@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FileNode } from '@/types/types';
+import { Button } from './ui/button';
 import FolderIcon from '@heroicons/react/24/solid/FolderIcon';
 import { ChevronDownIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import DocumentIcon from '@heroicons/react/24/solid/DocumentIcon';
@@ -45,17 +46,10 @@ const Files: React.FC<FileProps> = ({ initialTree, setTree, onSelectFile, path, 
   };
 
   const handleDelete = async () => {
-    if (!initialTree || !path) return;
-    const parts = path.split('/');
-    const nameToDelete = parts.pop();
-    if (!nameToDelete) return;
+    if (!initialTree || !initialTree.name) return;
 
     try {
-      let parentHandle = rootHandle;
-      for (const part of parts) {
-        parentHandle = await parentHandle.getDirectoryHandle(part);
-      }
-      await parentHandle.removeEntry(nameToDelete, { recursive: true });
+      await dirHandle.removeEntry(initialTree.name, { recursive: true });
       const updatedTree = await getFileTree(rootHandle);
       setTree(updatedTree);
     } catch (err) {
@@ -84,13 +78,12 @@ const Files: React.FC<FileProps> = ({ initialTree, setTree, onSelectFile, path, 
     return (
       <div
         className="ml-4 cursor-pointer hover:bg-zinc-700 px-2 py-1 rounded text-sm flex items-center"
-        onClick={() => {
-          onSelectFile(currentPath);
-          console.log(currentPath);
-        }}
-        onContextMenu={(e) => {
+        onClick={() => onSelectFile(currentPath)}
+        onContextMenu={async (e) => {
           e.preventDefault();
-          handleDelete();
+          if (confirm(`Delete "${initialTree.name}"?`)) {
+            await handleDelete();
+          }
         }}
       >
         <DocumentIcon className="size-4 text-white mr-2" />
@@ -104,9 +97,11 @@ const Files: React.FC<FileProps> = ({ initialTree, setTree, onSelectFile, path, 
       <div
         className="flex items-center cursor-pointer hover:bg-zinc-800 px-2 py-1 rounded justify-between"
         onClick={() => setIsOpen(!isOpen)}
-        onContextMenu={(e) => {
+        onContextMenu={async (e) => {
           e.preventDefault();
-          handleDelete();
+          if (confirm(`Delete "${initialTree.name}"?`)) {
+            await handleDelete();
+          }
         }}
       >
         <div className='flex items-center'>
@@ -151,8 +146,12 @@ const ChildWrapper = ({ child, currentPath, setTree, onSelectFile, resolveChildH
 
   useEffect(() => {
     const resolveHandle = async () => {
-      const handle = await resolveChildHandle(child.name);
-      setChildHandle(handle);
+      try {
+        const handle = await resolveChildHandle(child.name);
+        setChildHandle(handle);
+      } catch (err) {
+        console.error("Failed to resolve child handle:", err);
+      }
     };
     resolveHandle();
   }, [child.name, resolveChildHandle]);
@@ -172,5 +171,3 @@ const ChildWrapper = ({ child, currentPath, setTree, onSelectFile, resolveChildH
 };
 
 export default Files;
-
-
