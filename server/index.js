@@ -1,13 +1,12 @@
 import dotenv from 'dotenv';
 import express from 'express';
-
-
 import cors from "cors";
 import cookieParser from "cookie-parser";
-// Import routes using ES module syntax
+import serverless from 'serverless-http'; 
 import repoRoutes from './routes/repoRoutes.js';
-// Import LangChainService
 import LangChainService from './services/Langchainservice.js';
+
+dotenv.config(); // Also remember to initialize dotenv
 
 const app = express();
 
@@ -34,28 +33,24 @@ app.use((req, res, next) => {
   next();
 });
 
-// Use the routes
 app.use('/api/repo', repoRoutes);
 
 app.get('/', (req, res) => {
-  res.send('Welcome to Codi, on this line you are taking to Codi server !!');
+  res.send('Welcome to Codi, on this line you are talking to Codi server !!');
 });
 
 const port = process.env.PORT || 3005;
-module.exports = serverless(app);
-try {
-  app.listen(port, async () => {
-    console.log(`Server listening on port ${port}`);
 
-    try {
-      await LangChainService.initialize();
-      console.log('LangChain service initialized successfully');
-    } catch (error) {
-      console.error('Failed to initialize LangChain service:', error);
-    }
-  });
-} catch (error) {
-  console.log(error);
-}
+app.listen(port, async () => {
+  console.log(`Server listening on port ${port}`);
 
+  try {
+    await LangChainService.initialize();
+    console.log('LangChain service initialized successfully');
+  } catch (error) {
+    console.error('Failed to initialize LangChain service:', error);
+  }
+});
 
+// ✅ ESM export for serverless environments
+export const handler = serverless(app);
