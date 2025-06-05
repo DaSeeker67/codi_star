@@ -110,7 +110,6 @@ const RepoAnalyzer: React.FC<RepoAnalyzerProps> = ({ filePath, username, reponam
       }]);
       
       const dirHandle = await window.showDirectoryPicker();
-      const dirPath = dirHandle.name;
       const files = await loadFilesFromDirectory(dirHandle);
 
       const result = await axios.post<ProcessResponse>('http://localhost:3005/api/repo/process', {
@@ -147,6 +146,7 @@ const RepoAnalyzer: React.FC<RepoAnalyzerProps> = ({ filePath, username, reponam
     if (!query.trim()) return;
     
     const userQuery = query;
+    const newThinkingMsgId = Date.now().toString();
     setQuery('');
     
     // Add user message to chat
@@ -159,9 +159,8 @@ const RepoAnalyzer: React.FC<RepoAnalyzerProps> = ({ filePath, username, reponam
 
     try {
       // Add thinking message
-      const thinkingMsgId = Date.now().toString();
       setMessages(prev => [...prev, {
-        id: thinkingMsgId,
+        id: newThinkingMsgId,
         type: 'assistant',
         content: 'Thinking...',
         timestamp: new Date()
@@ -175,7 +174,7 @@ const RepoAnalyzer: React.FC<RepoAnalyzerProps> = ({ filePath, username, reponam
 
       // Remove thinking message and add response
       setMessages(prev => 
-        prev.filter(msg => msg.id !== thinkingMsgId).concat({
+        prev.filter(msg => msg.id !== newThinkingMsgId).concat({
           id: Date.now().toString(),
           type: 'assistant',
           content: result.data.answer,
@@ -185,7 +184,7 @@ const RepoAnalyzer: React.FC<RepoAnalyzerProps> = ({ filePath, username, reponam
       );
     } catch (error) {
       console.error('Error:', error);
-      setMessages(prev => prev.filter(msg => msg.id !== thinkingMsgId).concat({
+      setMessages(prev => prev.filter(msg => msg.id !== newThinkingMsgId).concat({
         id: Date.now().toString(),
         type: 'assistant',
         content: 'An error occurred while analyzing your query. Please try again.',

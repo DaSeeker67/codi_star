@@ -10,13 +10,20 @@ import {
 } from 'lucide-react';
 import { FileNode } from '@/types/types';
 
+declare global {
+  interface Window {
+    showDirectoryPicker?: () => Promise<FileSystemDirectoryHandle>;
+    showOpenFilePicker?: (options: { multiple: boolean }) => Promise<FileSystemFileHandle[]>;
+  }
+}
+
 interface FileExplorerProps {
   fileSystem: FileNode[];
   onFileSelect: (file: FileNode) => void;
-  activeFileId: string | undefined;
+  activeFileId?: string;
   onCreateItem: (parentId: string, name: string, type: 'file' | 'folder') => void;
   onDeleteItem: (id: string) => void;
-  onImportFolder: () => void;
+  onImportFolder?: () => void;
   onFileSystemUpdate?: (newFileSystem: FileNode[]) => void;
 }
 
@@ -185,6 +192,10 @@ export const FileExplorer: React.FC<FileExplorerProps> = ({
     try {
       setIsLoading(true);
       
+      if (!window.showDirectoryPicker) {
+        throw new Error('File System Access API is not supported in this browser');
+      }
+      
       const dirHandle = await window.showDirectoryPicker();
       
       const newFileSystem = await processDirectoryHandle(dirHandle);
@@ -204,8 +215,7 @@ export const FileExplorer: React.FC<FileExplorerProps> = ({
   };
 
   const processDirectoryHandle = async (
-    dirHandle: FileSystemDirectoryHandle, 
-    parentId = 'root'
+    dirHandle: FileSystemDirectoryHandle
   ): Promise<FileNode[]> => {
     const items: FileNode[] = [];
     
@@ -215,12 +225,14 @@ export const FileExplorer: React.FC<FileExplorerProps> = ({
         
         if (entry.kind === 'directory') {
           try {
-            const children = await processDirectoryHandle(entry, id);
+            const directoryHandle = entry as FileSystemDirectoryHandle;
+            const children = await processDirectoryHandle(directoryHandle);
             const folderItem: FileNode = {
               id,
               name: entry.name,
               type: 'folder',
-              children
+              children,
+              handle: directoryHandle
             };
             items.push(folderItem);
           } catch (e) {
@@ -228,22 +240,22 @@ export const FileExplorer: React.FC<FileExplorerProps> = ({
           }
         } else if (entry.kind === 'file') {
           try {
-            const file = await entry.getFile();
+            const fileHandle = entry as FileSystemFileHandle;
+            const file = await fileHandle.getFile();
             const fileItem: FileNode = {
               id,
               name: entry.name,
               type: 'file',
               content: '', 
-              handle: entry
+              handle: fileHandle
             };
             
-           
             try {
               if (file.size < 5 * 1024 * 1024) { 
                 fileItem.content = await file.text();
               }
             } catch (e) {
-              console.log(`Could not read content for ${entry.name}`, e);
+              console.log(`Could not read content for ${entry.name}:`, e);
             }
             
             items.push(fileItem);
@@ -261,6 +273,10 @@ export const FileExplorer: React.FC<FileExplorerProps> = ({
 
   const handleOpenLocalFile = async () => {
     try {
+      if (!window.showOpenFilePicker) {
+        throw new Error('File System Access API is not supported in this browser');
+      }
+
       const [fileHandle] = await window.showOpenFilePicker({
         multiple: false
       });
@@ -302,18 +318,19 @@ export const FileExplorer: React.FC<FileExplorerProps> = ({
     }
   };
 
-  const addItemToFileSystem = (items: FileNode[], parentId: string, newItem: FileSystemItem): boolean => {
+  const addItemToFileSystem = (items: FileNode[], parentId: string, newItem: FileNode): boolean => {
     for (let i = 0; i < items.length; i++) {
-      if (items[i].id === parentId && items[i].type === 'folder') {
-        if (!items[i].children) {
-          items[i].children = [];
+      const item = items[i];
+      if (item.id === parentId && item.type === 'folder') {
+        if (!item.children) {
+          item.children = [];
         }
-        items[i]?.children.push(newItem);
+        item.children.push(newItem);
         return true;
       }
       
-      if (items[i].type === 'folder' && items[i].children?.length) {
-        if (addItemToFileSystem(items[i]?.children, parentId, newItem)) {
+      if (item.type === 'folder' && item.children) {
+        if (addItemToFileSystem(item.children, parentId, newItem)) {
           return true;
         }
       }
@@ -331,7 +348,7 @@ export const FileExplorer: React.FC<FileExplorerProps> = ({
         <div 
           className={`flex items-center p-1 cursor-pointer hover:bg-gray-700 ${isActive ? 'bg-gray-600' : ''} ${isItemSelected ? 'border-l-2 border-blue-400' : ''}`}
           style={{ paddingLeft: `${depth * 12 + 8}px` }}
-          onClick={(e) => {
+          onClick={() => {
             setSelectedItem(item.id);
             if (item.type === 'folder') {
               toggleFolder(item.id);

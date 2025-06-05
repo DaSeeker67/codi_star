@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import { User, Plus } from 'lucide-react';
 import CodeEditor from '@/components/CodeEditor';
@@ -69,19 +69,17 @@ const Home = () => {
         <div className="flex-1 flex flex-col items-center justify-center">
           <div className="w-full max-w-md p-6 bg-zinc-800 rounded-lg shadow-lg">
             <div className="flex flex-col items-center mb-6">
-              {user.profileImageUrl ? (
-                <img 
-                  src={user.profileImageUrl} 
-                  alt="Profile" 
-                  className="w-24 h-24 rounded-full mb-4"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = "/api/placeholder/80/80";
-                  }}
+              {user.imageUrl ? (
+                <img
+                  src={user.imageUrl}
+                  alt="Profile"
+                  className="h-8 w-8 rounded-full"
                 />
               ) : (
-                <div className="w-24 h-24 rounded-full bg-zinc-700 flex items-center justify-center mb-4">
-                  <User size={48} />
+                <div className="h-8 w-8 rounded-full bg-zinc-700 flex items-center justify-center">
+                  <span className="text-sm text-white">
+                    {user.firstName?.[0] || user.username?.[0] || '?'}
+                  </span>
                 </div>
               )}
               <h2 className="text-xl font-semibold">{user.fullName || user.username}</h2>
@@ -148,7 +146,7 @@ const Home = () => {
       <div className="flex-1 flex w-full">
         <div className="w-4/5 flex justify-center">
           <div className="w-full">
-            <CodeEditor filePath={selectedPath} />
+            <CodeEditor />
           </div>
         </div>
         <div className="w-1/5 border-l border-zinc-700">

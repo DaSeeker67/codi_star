@@ -80,7 +80,7 @@ const Files: React.FC<FileProps> = ({ initialTree, setTree, onSelectFile, path, 
     return null;
   }
 
-  if (initialTree.kind === 'file') {
+  if (initialTree.type === 'file') {
     return (
       <div
         className="ml-4 cursor-pointer hover:bg-zinc-700 px-2 py-1 rounded text-sm flex items-center"
