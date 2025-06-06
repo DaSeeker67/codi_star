@@ -112,7 +112,7 @@ const RepoAnalyzer: React.FC<RepoAnalyzerProps> = ({ filePath, username, reponam
       const dirHandle = await window.showDirectoryPicker();
       const files = await loadFilesFromDirectory(dirHandle);
 
-      const result = await axios.post<ProcessResponse>('http://localhost:3005/api/repo/process', {
+      const result = await axios.post<ProcessResponse>('https://codi-star-2.onrender.com/api/repo/process', {
         files,
         username,
         repoName: reponame

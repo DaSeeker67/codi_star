@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "npm install --os=linux --cpu=x64 sharp"
   },
   "keywords": [],
   "author": "",
@@ -26,7 +27,8 @@
     "express": "^5.1.0",
     "langchain": "^0.3.21",
     "nodemon": "^3.1.9",
-    "serverless-http": "^3.2.0"
+    "serverless-http": "^3.2.0",
+    "sharp": "^0.33.2"
   },
   "devDependencies": {
     "prisma": "^6.6.0"
