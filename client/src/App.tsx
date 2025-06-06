@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Home from './pages/Home'
+import Home from './pages/Home2'
 import { SignedIn, SignedOut } from '@clerk/clerk-react'
 import LandingPage from './pages/LandingPage'
 
