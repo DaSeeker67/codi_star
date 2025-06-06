@@ -166,7 +166,7 @@ const RepoAnalyzer: React.FC<RepoAnalyzerProps> = ({ filePath, username, reponam
         timestamp: new Date()
       }]);
 
-      const result = await axios.post<QueryResponse>('http://localhost:3005/api/repo/query', {
+      const result = await axios.post<QueryResponse>('https://codi-star-2.onrender.com/api/repo/query', {
         query: userQuery,
         username,
         repoName: reponame
