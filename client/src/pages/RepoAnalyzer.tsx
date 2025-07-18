@@ -446,7 +446,7 @@ const RepoAnalyzer: React.FC = () => {
       }
       
       // Send directly to backend
-      const result = await axios.post<ProcessResponse>('http://localhost:3005/api/repo/process', {
+      const result = await axios.post<ProcessResponse>('https://codi-star-1-8r3x.onrender.com/api/repo/process', {
         files: filesWithContent,
         username: username || 'direct-user',
         repoName: reponame || 'direct-repo'
@@ -503,7 +503,7 @@ const RepoAnalyzer: React.FC = () => {
         return;
       }
       
-      const result = await axios.post<ProcessResponse>('http://localhost:3005/api/repo/process', {
+      const result = await axios.post<ProcessResponse>('https://codi-star-1-8r3x.onrender.com/api/repo/process', {
         files: filesWithContent,
         username,
         repoName: reponame 
@@ -552,7 +552,7 @@ const RepoAnalyzer: React.FC = () => {
         timestamp: new Date()
       }]);
 
-      const result = await axios.post<QueryResponse>('http://localhost:3005/api/repo/query', {
+      const result = await axios.post<QueryResponse>('https://codi-star-1-8r3x.onrender.com/api/repo/query', {
         query: userQuery,
         username: username || 'direct-user',
         repoName: reponame || 'direct-repo',

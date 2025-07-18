@@ -11,7 +11,7 @@ dotenv.config(); // Also remember to initialize dotenv
 const app = express();
 
 app.use(cors({
-  origin: ['http://localhost:5174', '*', 'http://localhost:5173'],
+  origin: ['http://localhost:5174', '*', 'http://localhost:5173', 'https://codi-sta.vercel.app'],
   credentials: true,
   methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],

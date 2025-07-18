@@ -298,7 +298,7 @@ export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       
       setProcessingMessage(`Found ${filesWithContent.length} files to process. Sending to backend...`);
       
-      const result = await axios.post<ProcessResponse>('http://localhost:3005/api/repo/process', {
+      const result = await axios.post<ProcessResponse>('https://codi-star-1-8r3x.onrender.com/api/repo/process', {
         files: filesWithContent,
         username: username || 'local',
         repoName: reponame || 'repository'
