@@ -11,7 +11,7 @@ dotenv.config(); // Also remember to initialize dotenv
 const app = express();
 
 app.use(cors({
-  origin: ['http://localhost:5174', '*', 'http://localhost:5173', 'https://hrify-frontend-plum.vercel.app', 'https://hrify-frontend-crvwhg7b2-ayushman075s-projects.vercel.app'],
+  origin: ['http://localhost:5174', '*', 'http://localhost:5173'],
   credentials: true,
   methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],

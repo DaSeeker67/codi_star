@@ -12,9 +12,10 @@
   "type": "module",
   "description": "",
   "dependencies": {
-    "@huggingface/inference": "^2.8.1",
+    "@huggingface/inference": "^4.0.5",
     "@huggingface/transformers": "^3.4.2",
-    "@langchain/community": "^0.3.40",
+    "@langchain/cohere": "^0.3.4",
+    "@langchain/community": "^0.3.48",
     "@langchain/core": "^0.3.44",
     "@langchain/groq": "^0.2.2",
     "@langchain/openai": "^0.5.5",
@@ -27,8 +28,9 @@
     "express": "^5.1.0",
     "langchain": "^0.3.21",
     "nodemon": "^3.1.9",
+    "onnxruntime-node": "^1.22.0-rev",
     "serverless-http": "^3.2.0",
-    "sharp": "^0.33.2"
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "prisma": "^6.6.0"
