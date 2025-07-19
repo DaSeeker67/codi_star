@@ -23,7 +23,6 @@ export const FileExplorer: React.FC = () => {
     setFileSystem, 
     activeFile, 
     setActiveFile,
-    setFileContent,
     selectGlobalFolder,
     isLoading: globalLoading,
     isRepositoryInitialized
@@ -109,7 +108,6 @@ export const FileExplorer: React.FC = () => {
 
       if (newItemData.itemType === 'file') {
         setActiveFile(newItem);
-        setFileContent(newItem.content || '');
       }
     }
   };
@@ -138,7 +136,6 @@ export const FileExplorer: React.FC = () => {
     setFileSystem(updated);
     if (activeFile?.id === itemId) {
       setActiveFile(null);
-      setFileContent('');
     }
     setSelectedItem(null);
     hideContextMenu();
@@ -147,7 +144,6 @@ export const FileExplorer: React.FC = () => {
   const handleFileSelect = (file: FileNode) => {
     if (file.type === 'file') {
       setActiveFile(file);
-      setFileContent(file.content || '');
     }
     setSelectedItem(file.id);
   };
@@ -191,7 +187,6 @@ export const FileExplorer: React.FC = () => {
       const updated = [...fileSystem, newFile];
       setFileSystem(updated);
       setActiveFile(newFile);
-      setFileContent(content);
       hideContextMenu();
     } catch (e) {
       console.log('File open canceled or failed', e);

@@ -626,23 +626,24 @@ export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const items: FileNode[] = [];
     
     try {
-      for await (const entry of dirHandle.values()) {
+      // Use entries() to iterate over directory entries
+      for await (const [entryName, entry] of (dirHandle as any).entries()) {
         const id = generateUniqueId();
-        const currentPath = parentPath ? `${parentPath}/${entry.name}` : entry.name;
-        
+        const currentPath = parentPath ? `${parentPath}/${entryName}` : entryName;
+
         if (entry.kind === 'directory') {
           // Skip excluded folders
-          if (shouldExcludeFolder(entry.name)) {
-            console.log(`Skipping excluded folder: ${entry.name}`);
+          if (shouldExcludeFolder(entryName)) {
+            console.log(`Skipping excluded folder: ${entryName}`);
             continue;
           }
-          
+
           try {
             const directoryHandle = entry as FileSystemDirectoryHandle;
             const children = await processDirectoryHandle(directoryHandle, currentPath);
             const folderItem: FileNode = {
               id,
-              name: entry.name,
+              name: entryName,
               type: 'folder',
               children,
               handle: directoryHandle,
@@ -650,14 +651,14 @@ export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             };
             items.push(folderItem);
           } catch (e) {
-            console.error(`Error processing folder ${entry.name}:`, e);
+            console.error(`Error processing folder ${entryName}:`, e);
           }
         } else if (entry.kind === 'file') {
           try {
             const fileHandle = entry as FileSystemFileHandle;
             const fileItem: FileNode = {
               id,
-              name: entry.name,
+              name: entryName,
               type: 'file',
               content: '',
               handle: fileHandle,
@@ -665,10 +666,10 @@ export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
               isContentLoaded: false,
               isModified: false
             };
-            
+
             items.push(fileItem);
           } catch (e) {
-            console.error(`Error processing file ${entry.name}:`, e);
+            console.error(`Error processing file ${entryName}:`, e);
           }
         }
       }

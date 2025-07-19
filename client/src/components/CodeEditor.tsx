@@ -288,7 +288,7 @@ const CodeEditor = () => {
                   wordWrap: 'on',
                   lineNumbers: 'on',
                   folding: true,
-                  bracketMatching: 'always',
+                  matchBrackets: 'always',
                   autoIndent: 'full',
                   formatOnPaste: true,
                   formatOnType: true,
